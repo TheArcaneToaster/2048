@@ -24,10 +24,3 @@ int main()
 
     return 0;
 }
-
-/* TODO
-check zeros 
->game fail
-
-przed wykonaniem ruchu sprawdzić, czy coś się
-*/
