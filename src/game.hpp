@@ -38,9 +38,9 @@ void BOARD::count_zeroes_on_board()
 {
     unsigned zera = 0;
 
-    for (unsigned i = 0; i < DIMENSION -1; i++)
+    for (unsigned i = 0; i < DIMENSION; i++)
     {
-            for (unsigned j = 0; j < DIMENSION -1; j++)
+            for (unsigned j = 0; j < DIMENSION; j++)
             {
                 if (board[i][j] == 0)
                     ++zera;
@@ -55,8 +55,14 @@ void BOARD::update_board()
     count_zeroes_on_board();
 }
 
-void BOARD::add_tile()
+bool BOARD::add_tile()
 {
+    update_board();
+    if (zeroes == 0)
+    {
+        return false;
+    }
+
     unsigned i = rand() % DIMENSION;
     unsigned j = rand() % DIMENSION;
 
@@ -67,6 +73,7 @@ void BOARD::add_tile()
     }
 
     board[i][j] = 2;
+    return true;
 }
 
 void BOARD::find_highest_on_board()
@@ -213,11 +220,21 @@ void BOARD::column_up(unsigned column)
     }
 }
 
-GAME::GAME() : GAME_OVER(false)
+GAME::GAME() : GAME_OVER(no_problemo)
 {
-    this->add_tile();
-    this->add_tile();
-    this->show_board();
+    update_board();
+
+    add_tile();
+    add_tile();
+    show_board();
+}
+
+void GAME::add_tile()
+{
+    if (!BOARD::add_tile())
+    {
+        GAME_OVER = no_space;
+    }
 }
 
 void GAME::move_right()
@@ -254,24 +271,41 @@ void GAME::make_move(char move)
         move_down();
     else if (move == 'u')
         move_up();
-    else
-        return;
+    else return;
 
     update_board();
 
-    if (game_ended() != true)
+    if (highest_on_board() == oczko)
+        GAME_OVER = winner;
+    else if (highest_on_board() > oczko)
+        GAME_OVER = over_2048;
+
+    if (GAME_OVER == no_problemo)
         add_tile();
 }
 
-bool GAME::game_ended()
+void GAME::credits()
 {
-    if (this->highest_on_board() >= 2048)
-        GAME_OVER = true;
-
-    return GAME_OVER;
-}
-
-bool GAME::bingo()
-{
-    return highest_on_board() == 2048;
+    switch (GAME_OVER)
+    {
+        case winner:
+            std::cout << "\033[1;32m!---!---YOU'VE WON---!---!\033[0m" << std::endl;
+            break;
+        case no_space:
+            std::cout << "\033[1;31m!---!---YOU'VE LOST---!---!\033[0m" << std::endl;
+            std::cout << "\033[1;31m!--No place for new tiles-!\033[0m" << std::endl;
+            break;
+        case over_2048:
+            std::cout << "\033[1;31m!---!---YOU'VE LOST---!---!\033[0m" << std::endl;
+            std::cout << "\033[1;31m!-------Exceeded 2048-----!\033[0m" << std::endl;
+            break;
+        case quitter:
+            std::cout << "\033[1;31m!---!---YOU'VE LOST---!---!\033[0m" << std::endl;
+            std::cout << "\033[1;31m!---You quitted the game--!\033[0m" << std::endl;
+            break;
+        default:
+            std::cout << "\033[1;31m!---!---YOU'VE LOST---!---!\033[0m" << std::endl;
+            std::cout << "\033[1;31m!--Something went wrong---!\033[0m" << std::endl;
+            break;
+    }
 }
