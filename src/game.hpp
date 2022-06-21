@@ -34,9 +34,25 @@ void BOARD::show_board() const
     }
 }
 
+void BOARD::count_zeroes_on_board()
+{
+    unsigned zera = 0;
+
+    for (unsigned i = 0; i < DIMENSION -1; i++)
+    {
+            for (unsigned j = 0; j < DIMENSION -1; j++)
+            {
+                if (board[i][j] == 0)
+                    ++zera;
+            }
+    }
+    zeroes = zera;
+}
+
 void BOARD::update_board()
 {
     find_highest_on_board();
+    count_zeroes_on_board();
 }
 
 void BOARD::add_tile()
@@ -83,6 +99,8 @@ void BOARD::row_right(unsigned row)
             {
                 board[row][i] = board[row][k];
                 board[row][k] = 0;
+
+                row_right(row);
             }
         }
         else    //we're watching non-zero value
@@ -114,6 +132,8 @@ void BOARD::row_left(unsigned row)
             {
                 board[row][i] = board[row][k];
                 board[row][k] = 0;
+
+                row_left(row);
             }
         }
         else    //we're watching non-zero value
@@ -145,6 +165,8 @@ void BOARD::column_down(unsigned column)
             {
                 board[i][column] = board[k][column];
                 board[k][column] = 0;
+
+                column_down(column);
             }
         }
         else    //we're watching non-zero value
@@ -176,6 +198,8 @@ void BOARD::column_up(unsigned column)
             {
                 board[i][column] = board[k][column];
                 board[k][column] = 0;
+
+                column_up(column);
             }
         }
         else    //we're watching non-zero value
@@ -189,7 +213,7 @@ void BOARD::column_up(unsigned column)
     }
 }
 
-GAME::GAME() : finished(false)
+GAME::GAME() : GAME_OVER(false)
 {
     this->add_tile();
     this->add_tile();
@@ -242,9 +266,9 @@ void GAME::make_move(char move)
 bool GAME::game_ended()
 {
     if (this->highest_on_board() >= 2048)
-        finished = true;
+        GAME_OVER = true;
 
-    return finished;
+    return GAME_OVER;
 }
 
 bool GAME::bingo()

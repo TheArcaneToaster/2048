@@ -4,15 +4,17 @@ class BOARD
         static const unsigned DIMENSION = 4;
         int board[DIMENSION][DIMENSION] = {};
         unsigned highest;
+        unsigned zeroes;
 
     public:
-        BOARD() : highest(0) {}
+        BOARD() : highest(0), zeroes(DIMENSION*DIMENSION) {}
         ~BOARD() = default;
 
         //Data
         unsigned return_dimension() const {return DIMENSION;}
         unsigned highest_on_board() const;
         void show_board() const;
+        void count_zeroes_on_board();
 
         //Actions
         void update_board();
@@ -35,7 +37,7 @@ class GAME : protected BOARD
         void move_up();
 
     public:
-        bool finished;
+        bool GAME_OVER;
 
         GAME();
 

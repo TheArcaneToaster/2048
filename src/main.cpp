@@ -5,13 +5,14 @@
 int main()
 {
     GAME gra;
-    char choice = 0;
+    char decisions = 0;
 
-    while(choice != 'q' || gra.finished == true)
+    while(decisions != 'q' || gra.GAME_OVER == true)
     {
-        std::cin >> choice;
+        std::cout << "\033[32mWhat move do you want to make (u/d/l/r/q):\033[0m ";
+        std::cin >> decisions;
 
-        gra.make_move(choice);
+        gra.make_move(decisions);
         gra.show_board();
     }
 
@@ -25,10 +26,8 @@ int main()
 }
 
 /* TODO
-GAME::move_up()
-BOARD::column_up()
-GAME::move_down()
-BOARD::column_up()
-GAME::make_move 
-    -specify move 
+check zeros 
+>game fail
+
+przed wykonaniem ruchu sprawdzić, czy coś się
 */
