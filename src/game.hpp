@@ -263,6 +263,9 @@ void GAME::move_up()
 
 void GAME::make_move(char move)
 {
+    if (GAME_OVER != no_problemo)
+        return;
+
     if (move == 'r')
         move_right();
     else if (move == 'l')
